@@ -37,6 +37,15 @@ $routes->group('admin', ['filter' => 'auth'], function($routes) {
     // Daftar Pengunjung & Tamu
     $routes->get('pengunjung', 'AdminController::pengunjung');
     $routes->get('tamu', 'AdminController::tamu');
+    
+    // CRUD Tamu & Pengunjung (Admin)
+    $routes->post('tamu/store', 'AdminController::storeTamu');
+    $routes->post('tamu/update/(:num)', 'AdminController::updateTamu/$1');
+    $routes->post('tamu/delete/(:num)', 'AdminController::deleteTamu/$1');
+    
+    $routes->post('pengunjung/store', 'AdminController::storeTamu');
+    $routes->post('pengunjung/update/(:num)', 'AdminController::updateTamu/$1');
+    $routes->post('pengunjung/delete/(:num)', 'AdminController::deleteTamu/$1');
 
     // Laporan
     $routes->get('laporan', 'AdminController::laporan');

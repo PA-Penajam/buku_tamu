@@ -141,6 +141,107 @@ class AdminController extends Controller
     }
 
     /**
+     * Menyimpan data tamu/pengunjung baru via AJAX
+     */
+    public function storeTamu()
+    {
+        $jenisTamu = $this->request->getPost('jenis_tamu');
+        
+        $rules = [
+            'jenis_tamu' => 'required|in_list[pengunjung,tamu]',
+            'nama'       => 'required|max_length[255]',
+            'hp'         => 'permit_empty|max_length[20]',
+            'tujuan'     => 'required',
+        ];
+
+        if ($jenisTamu === 'pengunjung') {
+            $rules['alamat'] = 'required';
+        } else {
+            $rules['instansi'] = 'required';
+        }
+
+        if (!$this->validate($rules)) {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'errors' => $this->validator->getErrors()
+            ]);
+        }
+
+        $data = [
+            'jenis_tamu' => $jenisTamu,
+            'tanggal'    => date('Y-m-d H:i:s'),
+            'nama'       => $this->request->getPost('nama'),
+            'alamat'     => $this->request->getPost('alamat') ?? null,
+            'instansi'   => $this->request->getPost('instansi') ?? null,
+            'hp'         => $this->request->getPost('hp') ?? null,
+            'tujuan'     => $this->request->getPost('tujuan'),
+        ];
+
+        if ($this->tamuModel->insert($data)) {
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Data berhasil disimpan']);
+        }
+
+        return $this->response->setJSON(['status' => 'error', 'message' => 'Gagal menyimpan data']);
+    }
+
+    /**
+     * Update data tamu/pengunjung via AJAX
+     */
+    public function updateTamu($id)
+    {
+        $tamu = $this->tamuModel->find($id);
+        if (!$tamu) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Data tidak ditemukan']);
+        }
+
+        $jenisTamu = $tamu['jenis_tamu'];
+        
+        $rules = [
+            'nama'       => 'required|max_length[255]',
+            'hp'         => 'permit_empty|max_length[20]',
+            'tujuan'     => 'required',
+        ];
+
+        if ($jenisTamu === 'pengunjung') {
+            $rules['alamat'] = 'required';
+        } else {
+            $rules['instansi'] = 'required';
+        }
+
+        if (!$this->validate($rules)) {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'errors' => $this->validator->getErrors()
+            ]);
+        }
+
+        $data = [
+            'nama'       => $this->request->getPost('nama'),
+            'alamat'     => $this->request->getPost('alamat') ?? null,
+            'instansi'   => $this->request->getPost('instansi') ?? null,
+            'hp'         => $this->request->getPost('hp') ?? null,
+            'tujuan'     => $this->request->getPost('tujuan'),
+        ];
+
+        if ($this->tamuModel->update($id, $data)) {
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Data berhasil diupdate']);
+        }
+
+        return $this->response->setJSON(['status' => 'error', 'message' => 'Gagal update data']);
+    }
+
+    /**
+     * Hapus data tamu/pengunjung via AJAX
+     */
+    public function deleteTamu($id)
+    {
+        if ($this->tamuModel->delete($id)) {
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Data berhasil dihapus']);
+        }
+        return $this->response->setJSON(['status' => 'error', 'message' => 'Gagal hapus data']);
+    }
+
+    /**
      * Helper untuk mendapatkan nama bulan
      *
      * @param int $bulan
