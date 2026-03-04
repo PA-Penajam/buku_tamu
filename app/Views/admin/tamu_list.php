@@ -133,9 +133,31 @@
         currentModal = new bootstrap.Modal(document.getElementById('kt_modal_form'));
         
         if (typeof $ !== 'undefined' && $.fn.DataTable) {
-            $('#kt_table_tamu').DataTable({
+                        $('#kt_table_tamu').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "/admin/tamu/dt",
+                    "type": "POST"
+                },
+                "columns": [
+                    { 
+                        "data": "id",
+                        "orderable": false,
+                        "searchable": false,
+                        "render": function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { "data": "tanggal" },
+                    { "data": "nama" },
+                    { "data": "instansi" },
+                    { "data": "hp" },
+                    { "data": "tujuan" },
+                    { "data": "aksi", "orderable": false, "searchable": false, "className": "text-end" }
+                ],
                 "info": true,
-                "order": [],
+                "order": [[1, "desc"]],
                 "pageLength": 10,
                 "paging": true,
                 "searching": true,
@@ -144,7 +166,8 @@
                     "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
                     "search": "Cari:",
                     "emptyTable": "Tidak ada data tersedia",
-                    "zeroRecords": "Tidak ada data yang cocok"
+                    "zeroRecords": "Tidak ada data yang cocok",
+                    "processing": "Memproses data..."
                 }
             });
         }

@@ -36,7 +36,9 @@ $routes->group('admin', ['filter' => 'auth'], function($routes) {
 
     // Daftar Pengunjung & Tamu
     $routes->get('pengunjung', 'AdminController::pengunjung');
+    $routes->post('pengunjung/dt', 'AdminController::pengunjungDt');
     $routes->get('tamu', 'AdminController::tamu');
+    $routes->post('tamu/dt', 'AdminController::tamuDt');
     
     // CRUD Tamu & Pengunjung (Admin)
     $routes->post('tamu/store', 'AdminController::storeTamu');

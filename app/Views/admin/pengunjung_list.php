@@ -35,34 +35,6 @@
                         </tr>
                     </thead>
                     <tbody class="text-gray-600 fw-semibold">
-                        <?php if (empty($data)): ?>
-                            <tr>
-                                <td colspan="7" class="text-center py-4 text-muted">
-                                    Belum ada data pengunjung
-                                </td>
-                            </tr>
-                        <?php else: ?>
-                            <?php 
-                            $no = 1;
-                            foreach ($data as $row): 
-                            ?>
-                                <tr>
-                                    <td><?= $no++ ?></td>
-                                    <td>
-                                        <div class="text-gray-800 fw-bold"><?= date('d/m/Y', strtotime($row['tanggal'])) ?></div>
-                                        <div class="text-muted"><?= date('H:i', strtotime($row['tanggal'])) ?></div>
-                                    </td>
-                                    <td class="text-gray-800 fw-bold"><?= esc($row['nama']) ?></td>
-                                    <td><?= esc($row['alamat'] ?? '-') ?></td>
-                                    <td><?= esc($row['hp'] ?? '-') ?></td>
-                                    <td><?= esc($row['tujuan'] ?? '-') ?></td>
-                                    <td class="text-end">
-                                        <button class="btn btn-sm btn-light-primary" onclick="openEditModal(<?= htmlspecialchars(json_encode($row), ENT_QUOTES, 'UTF-8') ?>)">Edit</button>
-                                        <button class="btn btn-sm btn-light-danger" onclick="deleteData(<?= $row['id'] ?>)">Hapus</button>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -133,9 +105,31 @@
         currentModal = new bootstrap.Modal(document.getElementById('kt_modal_form'));
         
         if (typeof $ !== 'undefined' && $.fn.DataTable) {
-            $('#kt_table_pengunjung').DataTable({
+                        $('#kt_table_pengunjung').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "/admin/pengunjung/dt",
+                    "type": "POST"
+                },
+                "columns": [
+                    { 
+                        "data": "id",
+                        "orderable": false,
+                        "searchable": false,
+                        "render": function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { "data": "tanggal" },
+                    { "data": "nama" },
+                    { "data": "alamat" },
+                    { "data": "hp" },
+                    { "data": "tujuan" },
+                    { "data": "aksi", "orderable": false, "searchable": false, "className": "text-end" }
+                ],
                 "info": true,
-                "order": [],
+                "order": [[1, "desc"]],
                 "pageLength": 10,
                 "paging": true,
                 "searching": true,
@@ -144,7 +138,8 @@
                     "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
                     "search": "Cari:",
                     "emptyTable": "Tidak ada data tersedia",
-                    "zeroRecords": "Tidak ada data yang cocok"
+                    "zeroRecords": "Tidak ada data yang cocok",
+                    "processing": "Memproses data..."
                 }
             });
         }

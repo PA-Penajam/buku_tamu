@@ -41,14 +41,29 @@ class AdminController extends Controller
     public function pengunjung()
     {
         $data = [
-            'title' => 'Daftar Pengunjung',
-            'data'  => $this->tamuModel->pengunjung()
-                ->orderBy('tanggal', 'DESC')
-                ->findAll(),
-            'pager' => null,
+            'title' => 'Daftar Pengunjung'
         ];
 
         return view('admin/pengunjung_list', $data);
+    }
+
+    public function pengunjungDt()
+    {
+        $builder = $this->tamuModel->builder()->where('jenis_tamu', 'pengunjung');
+        return \Hermawan\DataTables\DataTable::of($builder)
+            ->add('aksi', function($row){
+                $rowData = htmlspecialchars(json_encode($row), ENT_QUOTES, 'UTF-8');
+                return '<button class="btn btn-sm btn-light-primary me-2" onclick="openEditModal('.$rowData.')">Edit</button>' .
+                       '<button class="btn btn-sm btn-light-danger" onclick="deleteData('.$row->id.')">Hapus</button>';
+            })
+            ->format('tanggal', function($value){
+                return '<div class="text-gray-800 fw-bold">'.date('d/m/Y', strtotime($value)).'</div>'.
+                       '<div class="text-muted">'.date('H:i', strtotime($value)).'</div>';
+            })
+            ->format('nama', function($value){
+                return '<div class="text-gray-800 fw-bold">'.esc($value).'</div>';
+            })
+            ->toJson(true);
     }
 
     /**
@@ -59,14 +74,29 @@ class AdminController extends Controller
     public function tamu()
     {
         $data = [
-            'title' => 'Daftar Tamu',
-            'data'  => $this->tamuModel->tamu()
-                ->orderBy('tanggal', 'DESC')
-                ->findAll(),
-            'pager' => null,
+            'title' => 'Daftar Tamu'
         ];
 
         return view('admin/tamu_list', $data);
+    }
+
+    public function tamuDt()
+    {
+        $builder = $this->tamuModel->builder()->where('jenis_tamu', 'tamu');
+        return \Hermawan\DataTables\DataTable::of($builder)
+            ->add('aksi', function($row){
+                $rowData = htmlspecialchars(json_encode($row), ENT_QUOTES, 'UTF-8');
+                return '<button class="btn btn-sm btn-light-primary me-2" onclick="openEditModal('.$rowData.')">Edit</button>' .
+                       '<button class="btn btn-sm btn-light-danger" onclick="deleteData('.$row->id.')">Hapus</button>';
+            })
+            ->format('tanggal', function($value){
+                return '<div class="text-gray-800 fw-bold">'.date('d/m/Y', strtotime($value)).'</div>'.
+                       '<div class="text-muted">'.date('H:i', strtotime($value)).'</div>';
+            })
+            ->format('nama', function($value){
+                return '<div class="text-gray-800 fw-bold">'.esc($value).'</div>';
+            })
+            ->toJson(true);
     }
 
     /**
