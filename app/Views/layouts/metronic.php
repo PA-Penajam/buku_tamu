@@ -25,7 +25,7 @@
             <!-- Aside -->
             <?= $this->renderSection('aside') ?>
             
-            <div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper" <?= !$is_admin ? 'style="padding-left: 0; padding-top: 0;"' : '' ?>>
+            <div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper" style="padding-left: 0; padding-top: <?= $is_admin ? '75px' : '0' ?>;">
                 <!-- Header -->
                 <?= $this->renderSection('header') ?>
                 
