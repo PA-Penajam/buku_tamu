@@ -1,67 +1,44 @@
-<?= $this->extend('layouts/main') ?>
+<?= $this->extend('layouts/metronic') ?>
 
 <?= $this->section('content') ?>
-<div class="row justify-content-center">
-    <div class="col-md-10 col-lg-8">
-        <!-- Header -->
-        <div class="text-center mb-5">
-            <h1 class="display-5 fw-bold text-primary mb-3">
-                <i class="bi bi-journal-bookmark"></i> Buku Tamu
-            </h1>
-            <p class="lead text-muted">
-                Silakan pilih jenis kunjungan Anda
-            </p>
-        </div>
+<div class="d-flex flex-column flex-root h-100" id="kt_app_root">
+    <div class="d-flex flex-column flex-center flex-column-fluid">
+        <div class="d-flex flex-column flex-center text-center p-10">
+            <div class="card card-flush w-lg-650px py-5">
+                <div class="card-body py-15 py-lg-20">
+                    <div class="mb-14">
+                        <a href="/" class="">
+                            <i class="ki-duotone ki-book text-primary fs-3x"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span></i>
+                        </a>
+                    </div>
+                    <h1 class="fw-bolder text-gray-900 mb-5">Selamat Datang di Buku Tamu</h1>
+                    <div class="fw-semibold fs-6 text-gray-500 mb-10">Silakan pilih jenis kunjungan Anda untuk melanjutkan proses pengisian data</div>
 
-        <!-- Cards Pilihan -->
-        <div class="row g-4">
-            <!-- Card Pengunjung -->
-            <div class="col-md-6">
-                <a href="/pengunjung" class="text-decoration-none">
-                    <div class="card card-hover h-100 border-0 shadow">
-                        <div class="card-body text-center py-5">
-                            <div class="mb-4">
-                                <i class="bi bi-people-fill icon-large text-primary"></i>
-                            </div>
-                            <h2 class="card-title h3 mb-3">Pengunjung</h2>
-                            <p class="card-text text-muted">
-                                Untuk masyarakat umum yang berkunjung ke kantor
-                            </p>
-                            <span class="btn btn-primary mt-3">
-                                <i class="bi bi-pencil-square me-2"></i>Isi Data
-                            </span>
+                    <div class="row g-5">
+                        <div class="col-md-6">
+                            <a href="/pengunjung" class="card border border-primary border-hover border-dashed bg-light-primary text-center p-10 h-100 card-hover">
+                                <i class="ki-duotone ki-people text-primary fs-3x mb-5"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span></i>
+                                <h3 class="text-primary fw-bolder mb-2">Pengunjung</h3>
+                                <div class="text-gray-600 fs-7">Untuk masyarakat umum yang berkunjung ke kantor</div>
+                                <div class="btn btn-sm btn-primary fw-bold mt-5 w-100">Isi Data</div>
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="/tamu" class="card border border-success border-hover border-dashed bg-light-success text-center p-10 h-100 card-hover">
+                                <i class="ki-duotone ki-badge text-success fs-3x mb-5"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span></i>
+                                <h3 class="text-success fw-bolder mb-2">Tamu</h3>
+                                <div class="text-gray-600 fs-7">Untuk tamu dari instansi/perusahaan yang berkunjung</div>
+                                <div class="btn btn-sm btn-success fw-bold mt-5 w-100">Isi Data</div>
+                            </a>
                         </div>
                     </div>
-                </a>
-            </div>
-
-            <!-- Card Tamu -->
-            <div class="col-md-6">
-                <a href="/tamu" class="text-decoration-none">
-                    <div class="card card-hover h-100 border-0 shadow">
-                        <div class="card-body text-center py-5">
-                            <div class="mb-4">
-                                <i class="bi bi-person-badge icon-large text-success"></i>
-                            </div>
-                            <h2 class="card-title h3 mb-3">Tamu</h2>
-                            <p class="card-text text-muted">
-                                Untuk tamu dari instansi/perusahaan yang berkunjung
-                            </p>
-                            <span class="btn btn-success mt-3">
-                                <i class="bi bi-pencil-square me-2"></i>Isi Data
-                            </span>
-                        </div>
+                    
+                    <div class="text-center mt-15 text-muted fw-semibold fs-7">
+                        <i class="ki-duotone ki-shield-tick text-success fs-4"><span class="path1"></span><span class="path2"></span></i>
+                        Data Anda aman dan terlindungi
                     </div>
-                </a>
+                </div>
             </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="text-center mt-5 text-muted">
-            <small>
-                <i class="bi bi-shield-check me-1"></i>
-                Data Anda aman dan terlindungi
-            </small>
         </div>
     </div>
 </div>
