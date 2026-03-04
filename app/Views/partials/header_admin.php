@@ -9,7 +9,7 @@
         <div class="d-flex align-items-stretch justify-content-between flex-lg-grow-1">
             <div class="d-flex align-items-stretch" id="kt_header_nav">
                 <div class="header-menu align-items-stretch">
-                    <div class="menu menu-lg-rounded menu-column menu-lg-row menu-state-bg menu-title-gray-700 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-400 fw-bold my-5 my-lg-0 align-items-stretch" id="#kt_header_menu" data-kt-menu="true">
+                    <div class="menu menu-rounded menu-column menu-lg-row menu-title-white menu-state-primary menu-arrow-gray-400 fw-semibold my-5 my-lg-0 align-items-stretch" id="#kt_header_menu" data-kt-menu="true">
                         <div class="menu-item <?= current_url() == base_url('admin') ? 'here show' : '' ?> menu-lg-down-accordion me-lg-1">
                             <a href="/admin" class="menu-link py-3">
                                 <span class="menu-title">Dashboard</span>
