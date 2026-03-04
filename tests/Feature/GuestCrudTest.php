@@ -69,4 +69,40 @@ final class GuestCrudTest extends CIUnitTestCase
 
         $this->seeInDatabase('tamu', ['id' => $id, 'nama' => 'New Name']);
     }
+
+    public function testAdminStoreTamuValidationError()
+    {
+        $result = $this->withSession(['isLoggedIn' => true, 'role' => 'admin'])
+                       ->post('/admin/tamu/store', ['jenis_tamu' => 'invalid']);
+        
+        $result->assertStatus(200);
+        $result->assertJSONFragment(['status' => 'error']);
+    }
+
+    public function testAdminUpdateTamuValidationError()
+    {
+        $model = new TamuModel();
+        $id = $model->insert([
+            'jenis_tamu' => 'pengunjung',
+            'tanggal'    => date('Y-m-d H:i:s'),
+            'nama'       => 'Old Name',
+            'alamat'     => 'Old Alamat',
+            'tujuan'     => 'Old Tujuan'
+        ]);
+
+        $result = $this->withSession(['isLoggedIn' => true, 'role' => 'admin'])
+                       ->post("/admin/pengunjung/update/{$id}", ['nama' => '']);
+        
+        $result->assertStatus(200);
+        $result->assertJSONFragment(['status' => 'error']);
+    }
+
+    public function testAdminUpdateTamuNotFound()
+    {
+        $result = $this->withSession(['isLoggedIn' => true, 'role' => 'admin'])
+                       ->post("/admin/tamu/update/9999", []);
+        
+        $result->assertStatus(200);
+        $result->assertJSONExact(['status' => 'error', 'message' => 'Data tidak ditemukan']);
+    }
 }

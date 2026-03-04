@@ -82,6 +82,10 @@ class TamuModel extends Model
      */
     public function filterBulanTahun($bulan, $tahun)
     {
+        if ($this->db->DBDriver === 'SQLite3') {
+            return $this->where("strftime('%m', tanggal)", sprintf('%02d', $bulan))
+                        ->where("strftime('%Y', tanggal)", (string)$tahun);
+        }
         return $this->where('MONTH(tanggal)', $bulan)
                     ->where('YEAR(tanggal)', $tahun);
     }
@@ -94,6 +98,13 @@ class TamuModel extends Model
      */
     public function statistikBulanan($tahun)
     {
+        if ($this->db->DBDriver === 'SQLite3') {
+            return $this->select("CAST(strftime('%m', tanggal) AS INTEGER) as bulan, jenis_tamu, COUNT(*) as jumlah")
+                        ->where("strftime('%Y', tanggal)", (string)$tahun)
+                        ->groupBy("strftime('%m', tanggal), jenis_tamu")
+                        ->findAll();
+        }
+        
         return $this->select("MONTH(tanggal) as bulan, jenis_tamu, COUNT(*) as jumlah")
                     ->where('YEAR(tanggal)', $tahun)
                     ->groupBy('MONTH(tanggal), jenis_tamu')
@@ -110,6 +121,19 @@ class TamuModel extends Model
         $today = date('Y-m-d');
         $thisMonth = date('m');
         $thisYear = date('Y');
+
+        if ($this->db->DBDriver === 'SQLite3') {
+            return [
+                'total_hari_ini' => $this->where("date(tanggal)", $today)->countAllResults(),
+                'total_bulan_ini' => $this->where("strftime('%m', tanggal)", $thisMonth)
+                                          ->where("strftime('%Y', tanggal)", $thisYear)
+                                          ->countAllResults(),
+                'total_tahun_ini' => $this->where("strftime('%Y', tanggal)", $thisYear)->countAllResults(),
+                'total_semua' => $this->countAll(),
+                'total_pengunjung' => $this->where('jenis_tamu', 'pengunjung')->countAllResults(),
+                'total_tamu' => $this->where('jenis_tamu', 'tamu')->countAllResults(),
+            ];
+        }
 
         return [
             'total_hari_ini' => $this->where('DATE(tanggal)', $today)->countAllResults(),

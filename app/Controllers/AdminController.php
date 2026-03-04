@@ -76,8 +76,8 @@ class AdminController extends Controller
      */
     public function laporan()
     {
-        $bulan = $this->request->getGet('bulan') ?? date('m');
-        $tahun = $this->request->getGet('tahun') ?? date('Y');
+        $bulan = (int) ($this->request->getGet('bulan') ?? date('m'));
+        $tahun = (int) ($this->request->getGet('tahun') ?? date('Y'));
 
         // Data untuk tabel
         $dataLaporan = $this->tamuModel
