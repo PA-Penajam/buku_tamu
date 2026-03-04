@@ -75,9 +75,7 @@
                             </tr>
                         <?php else: ?>
                             <?php 
-                            $currentPage = $pager->getCurrentPage() ?? 1;
-                            $perPage = 20; 
-                            $no = 1 + (($currentPage - 1) * $perPage);
+                            $no = 1;
                             foreach ($data as $row): 
                             ?>
                                 <tr>
