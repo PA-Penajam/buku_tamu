@@ -30,24 +30,7 @@
                 
                 <!-- Content -->
                 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
-                    <!-- Flash Messages -->
-                    <?php if (session()->getFlashdata('success')): ?>
-                        <div class="container-xxl mt-4">
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                <?= session()->getFlashdata('success') ?>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        </div>
-                    <?php endif; ?>
 
-                    <?php if (session()->getFlashdata('error')): ?>
-                        <div class="container-xxl mt-4">
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                <?= session()->getFlashdata('error') ?>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        </div>
-                    <?php endif; ?>
 
                     <!-- Dynamic Content -->
                     <?= $this->renderSection('content') ?>
@@ -65,5 +48,35 @@
     
     <!-- Custom Scripts -->
     <?= $this->renderSection('scripts') ?>
+
+    <?php if (session()->getFlashdata('success') || session()->getFlashdata('error')): ?>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            <?php if (session()->getFlashdata('success')): ?>
+            Swal.fire({
+                text: "<?= addslashes(session()->getFlashdata('success')) ?>",
+                icon: "success",
+                buttonsStyling: false,
+                confirmButtonText: "Ok, mengerti!",
+                customClass: {
+                    confirmButton: "btn btn-primary"
+                }
+            });
+            <?php endif; ?>
+
+            <?php if (session()->getFlashdata('error')): ?>
+            Swal.fire({
+                text: "<?= addslashes(session()->getFlashdata('error')) ?>",
+                icon: "error",
+                buttonsStyling: false,
+                confirmButtonText: "Ok, mengerti!",
+                customClass: {
+                    confirmButton: "btn btn-danger"
+                }
+            });
+            <?php endif; ?>
+        });
+    </script>
+    <?php endif; ?>
 </body>
 </html>

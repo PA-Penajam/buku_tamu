@@ -14,20 +14,7 @@
             </div>
             
             <div class="card-body py-10">
-                <!-- Error Messages -->
-                <?php if (isset($errors)): ?>
-                    <div class="alert alert-danger d-flex align-items-center p-5 mb-10">
-                        <i class="ki-duotone ki-shield-cross fs-2hx text-danger me-4"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
-                        <div class="d-flex flex-column">
-                            <h4 class="mb-1 text-danger">Terjadi Kesalahan</h4>
-                            <ul class="mb-0 text-danger ps-5">
-                                <?php foreach ($errors as $error): ?>
-                                    <li><?= esc($error) ?></li>
-                                <?php endforeach; ?>
-                            </ul>
-                        </div>
-                    </div>
-                <?php endif; ?>
+
 
                 <form action="/tamu/store" method="post" class="form" id="kt_form_pendaftaran">
                     <!-- Hidden field untuk jenis tamu -->
@@ -83,4 +70,22 @@
         </div>
     </div>
 </div>
+<?= $this->endSection() ?>
+
+<?= $this->section('scripts') ?>
+<?php if (isset($errors) && !empty($errors)): ?>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        Swal.fire({
+            text: "<?= addslashes(implode('\n', $errors)) ?>",
+            icon: "error",
+            buttonsStyling: false,
+            confirmButtonText: "Ok, mengerti!",
+            customClass: {
+                confirmButton: "btn btn-danger"
+            }
+        });
+    });
+</script>
+<?php endif; ?>
 <?= $this->endSection() ?>
