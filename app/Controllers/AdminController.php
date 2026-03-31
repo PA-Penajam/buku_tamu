@@ -443,9 +443,9 @@ class AdminController extends Controller
                 <td style="text-align:center">' . date('d/m/Y', strtotime($row['tanggal'])) . '</td>
                 <td style="text-align:center">' . date('H:i', strtotime($row['tanggal'])) . '</td>
                 <td style="text-align:center"><span class="badge ' . $badgeClass . '">' . ucfirst($row['jenis_tamu']) . '</span></td>
-                <td>' . esc($row['nama']) . '</td>
-                <td>' . esc($instansi) . '</td>
-                <td>' . esc($row['tujuan'] ?? '-') . '</td>
+                <td>' . htmlspecialchars($row['nama'] ?? '', ENT_QUOTES, 'UTF-8') . '</td>
+                <td>' . htmlspecialchars($instansi ?? '-', ENT_QUOTES, 'UTF-8') . '</td>
+                <td>' . htmlspecialchars($row['tujuan'] ?? '-', ENT_QUOTES, 'UTF-8') . '</td>
             </tr>';
         }
 
@@ -459,14 +459,21 @@ class AdminController extends Controller
 
         // Generate PDF with Dompdf
         $dompdf = new \Dompdf\Dompdf();
-        $dompdf->loadHtml($html);
+        $dompdf->loadHtml($html, 'UTF-8');
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
 
         $filename = 'laporan_buku_tamu_' . $namaBulan . '_' . $tahun . '.pdf';
+        $output = $dompdf->output();
 
         // Download PDF
-        $dompdf->stream($filename, ['Attachment' => true]);
+        header('Content-Type: application/pdf');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Content-Length: ' . strlen($output));
+        header('Cache-Control: private, max-age=0, must-revalidate');
+        header('Pragma: public');
+
+        echo $output;
         exit;
     }
 
