@@ -52,6 +52,10 @@ $routes->group('admin', ['filter' => 'auth'], function($routes) {
     // Laporan
     $routes->get('laporan', 'AdminController::laporan');
 
+    // Export Laporan
+    $routes->get('laporan/export/excel', 'AdminController::exportExcel');
+    $routes->get('laporan/export/pdf', 'AdminController::exportPdf');
+
     // API Chart Data
     $routes->get('chart', 'AdminController::chartData');
 });

@@ -36,6 +36,24 @@ $bulanList = [
                         <h2 class="mb-0">Filter Laporan</h2>
                     </div>
                     <!--end::Card title-->
+                    <!--begin::Card toolbar-->
+                    <div class="card-toolbar gap-2">
+                        <a href="<?= base_url('admin/laporan/export/excel?bulan=' . $bulan . '&tahun=' . $tahun) ?>" class="btn btn-success">
+                            <i class="ki-duotone ki-tablet-text-up fs-3">
+                                <span class="path1"></span>
+                                <span class="path2"></span>
+                            </i>
+                            Export Excel
+                        </a>
+                        <a href="<?= base_url('admin/laporan/export/pdf?bulan=' . $bulan . '&tahun=' . $tahun) ?>" class="btn btn-danger">
+                            <i class="ki-duotone ki-document fs-3">
+                                <span class="path1"></span>
+                                <span class="path2"></span>
+                            </i>
+                            Export PDF
+                        </a>
+                    </div>
+                    <!--end::Card toolbar-->
                 </div>
                 <!--end::Card header-->
                 <!--begin::Card body-->

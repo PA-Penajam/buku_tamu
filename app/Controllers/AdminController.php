@@ -272,6 +272,205 @@ class AdminController extends Controller
     }
 
     /**
+     * Export laporan dalam format Excel
+     */
+    public function exportExcel()
+    {
+        $bulan = (int) ($this->request->getGet('bulan') ?? date('m'));
+        $tahun = (int) ($this->request->getGet('tahun') ?? date('Y'));
+
+        $dataLaporan = $this->tamuModel
+            ->filterBulanTahun($bulan, $tahun)
+            ->orderBy('tanggal', 'DESC')
+            ->findAll();
+
+        $namaBulan = $this->getNamaBulan($bulan);
+
+        // Load library PhpSpreadsheet
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Header
+        $sheet->setCellValue('A1', 'LAPORAN BUKU TAMU');
+        $sheet->setCellValue('A2', 'Bulan: ' . $namaBulan . ' ' . $tahun);
+        $sheet->setCellValue('A3', 'Dicetak: ' . date('d/m/Y H:i'));
+
+        // Merge header
+        $sheet->mergeCells('A1:G1');
+        $sheet->mergeCells('A2:G2');
+        $sheet->mergeCells('A3:G3');
+
+        // Style header
+        $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
+        $sheet->getStyle('A2')->getFont()->setBold(true)->setSize(11);
+        $sheet->getStyle('A3')->getFont()->setSize(10);
+
+        // Header tabel
+        $headerRow = 5;
+        $headers = ['#', 'Tanggal', 'Jam', 'Jenis', 'Nama', 'Instansi / Alamat', 'Tujuan'];
+        foreach ($headers as $col => $header) {
+            $colLetter = chr(65 + $col);
+            $sheet->setCellValue($colLetter . $headerRow, $header);
+            $sheet->getStyle($colLetter . $headerRow)->getFont()->setBold(true);
+            $sheet->getStyle($colLetter . $headerRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('2563EB');
+            $sheet->getStyle($colLetter . $headerRow)->getFont()->getColor()->setRGB('FFFFFF');
+            $sheet->getStyle($colLetter . $headerRow)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        }
+
+        // Data
+        $rowNum = $headerRow + 1;
+        $no = 1;
+        foreach ($dataLaporan as $row) {
+            $sheet->setCellValue('A' . $rowNum, $no++);
+            $sheet->setCellValue('B' . $rowNum, date('d/m/Y', strtotime($row['tanggal'])));
+            $sheet->setCellValue('C' . $rowNum, date('H:i', strtotime($row['tanggal'])));
+            $sheet->setCellValue('D' . $rowNum, ucfirst($row['jenis_tamu']));
+            $sheet->setCellValue('E' . $rowNum, $row['nama']);
+            $sheet->setCellValue('F' . $rowNum, $row['jenis_tamu'] === 'tamu' ? ($row['instansi'] ?? '-') : ($row['alamat'] ?? '-'));
+            $sheet->setCellValue('G' . $rowNum, $row['tujuan'] ?? '-');
+
+            // Alignment
+            $sheet->getStyle('A' . $rowNum)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle('B' . $rowNum)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle('C' . $rowNum)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle('D' . $rowNum)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            $rowNum++;
+        }
+
+        // Auto width kolom
+        foreach (range('A', 'G') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+
+        // Download file
+        $filename = 'laporan_buku_tamu_' . $namaBulan . '_' . $tahun . '.xlsx';
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+        header('Expires: 0');
+
+        $writer->save('php://output');
+        exit;
+    }
+
+    /**
+     * Export laporan dalam format PDF
+     */
+    public function exportPdf()
+    {
+        $bulan = (int) ($this->request->getGet('bulan') ?? date('m'));
+        $tahun = (int) ($this->request->getGet('tahun') ?? date('Y'));
+
+        $dataLaporan = $this->tamuModel
+            ->filterBulanTahun($bulan, $tahun)
+            ->orderBy('tanggal', 'DESC')
+            ->findAll();
+
+        $namaBulan = $this->getNamaBulan($bulan);
+
+        // Hitung statistik
+        $totalPengunjung = count(array_filter($dataLaporan, fn($r) => $r['jenis_tamu'] === 'pengunjung'));
+        $totalTamu = count(array_filter($dataLaporan, fn($r) => $r['jenis_tamu'] === 'tamu'));
+        $total = count($dataLaporan);
+
+        $html = '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Laporan Buku Tamu</title>
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 11px; margin: 20px; }
+        h1 { text-align: center; font-size: 18px; margin-bottom: 5px; }
+        h2 { text-align: center; font-size: 14px; font-weight: normal; margin-top: 0; }
+        .meta { text-align: center; font-size: 10px; color: #666; margin-bottom: 20px; }
+        .stats { display: flex; justify-content: center; gap: 30px; margin-bottom: 20px; }
+        .stat-box { border: 1px solid #ddd; padding: 10px 20px; text-align: center; border-radius: 5px; }
+        .stat-box .value { font-size: 24px; font-weight: bold; color: #2563EB; }
+        .stat-box .label { font-size: 10px; color: #666; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { background: #2563EB; color: white; padding: 8px 6px; text-align: center; font-size: 10px; }
+        td { padding: 6px; border-bottom: 1px solid #ddd; vertical-align: top; }
+        tr:nth-child(even) { background: #f9f9f9; }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 9px; }
+        .badge-pengunjung { background: #DBEAFE; color: #2563EB; }
+        .badge-tamu { background: #DCFCE7; color: #16A34A; }
+        .footer { text-align: center; font-size: 9px; color: #999; margin-top: 30px; }
+    </style>
+</head>
+<body>
+    <h1>LAPORAN BUKU TAMU</h1>
+    <h2>' . $namaBulan . ' ' . $tahun . '</h2>
+    <p class="meta">Dicetak pada: ' . date('d/m/Y H:i') . ' | Total: ' . $total . ' kunjungan</p>
+
+    <div class="stats">
+        <div class="stat-box">
+            <div class="value">' . $totalPengunjung . '</div>
+            <div class="label">Pengunjung</div>
+        </div>
+        <div class="stat-box">
+            <div class="value">' . $totalTamu . '</div>
+            <div class="label">Tamu</div>
+        </div>
+        <div class="stat-box">
+            <div class="value">' . $total . '</div>
+            <div class="label">Total Kunjungan</div>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Tanggal</th>
+                <th>Jam</th>
+                <th>Jenis</th>
+                <th>Nama</th>
+                <th>Instansi / Alamat</th>
+                <th>Tujuan</th>
+            </tr>
+        </thead>
+        <tbody>';
+
+        $no = 1;
+        foreach ($dataLaporan as $row) {
+            $badgeClass = $row['jenis_tamu'] === 'pengunjung' ? 'badge-pengunjung' : 'badge-tamu';
+            $instansi = $row['jenis_tamu'] === 'tamu' ? ($row['instansi'] ?? '-') : ($row['alamat'] ?? '-');
+            $html .= '
+            <tr>
+                <td style="text-align:center">' . $no++ . '</td>
+                <td style="text-align:center">' . date('d/m/Y', strtotime($row['tanggal'])) . '</td>
+                <td style="text-align:center">' . date('H:i', strtotime($row['tanggal'])) . '</td>
+                <td style="text-align:center"><span class="badge ' . $badgeClass . '">' . ucfirst($row['jenis_tamu']) . '</span></td>
+                <td>' . esc($row['nama']) . '</td>
+                <td>' . esc($instansi) . '</td>
+                <td>' . esc($row['tujuan'] ?? '-') . '</td>
+            </tr>';
+        }
+
+        $html .= '
+        </tbody>
+    </table>
+
+    <p class="footer">Buku Tamu - Laporan Bulanan - Halaman 1</p>
+</body>
+</html>';
+
+        // Generate PDF with Dompdf
+        $dompdf = new \Dompdf\Dompdf();
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        $filename = 'laporan_buku_tamu_' . $namaBulan . '_' . $tahun . '.pdf';
+
+        // Download PDF
+        $dompdf->stream($filename, ['Attachment' => true]);
+        exit;
+    }
+
+    /**
      * Helper untuk mendapatkan nama bulan
      *
      * @param int $bulan
