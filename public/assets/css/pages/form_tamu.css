@@ -194,3 +194,35 @@
 
 /* Ukuran font bantuan */
 .fs-7 { font-size: 0.85rem !important; }
+
+/* Responsive adjustments for mobile */
+@media (max-width: 991px) {
+    #kt_form_stepper {
+        display: none !important;
+    }
+    
+    .text-center.mb-10 {
+        margin-bottom: 1.5rem !important;
+    }
+    
+    .text-center.mb-10 h1 {
+        font-size: 1.5rem !important;
+    }
+    
+    .text-center.mb-10 p {
+        display: none;
+    }
+    
+    .card.form-card {
+        margin-top: -10px;
+    }
+    
+    .card-body.p-8.p-lg-12 {
+        padding: 1.5rem !important;
+    }
+
+    .camera-box {
+        height: 320px;
+        border-radius: 1.5rem;
+    }
+}
