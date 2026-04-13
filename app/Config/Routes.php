@@ -18,6 +18,15 @@ $routes->get('/pengunjung', 'TamuController::pengunjung');
 $routes->get('/tamu', 'TamuController::tamu');
 $routes->post('/tamu/store', 'TamuController::store');
 
+// Halaman Sukses Pendaftaran
+$routes->get('/tamu/sukses', 'TamuController::sukses');
+
+// -------------------------------------------------------------------------
+// API Publik
+// -------------------------------------------------------------------------
+
+$routes->get('/api/stats/today', 'HomeController::apiStatsToday');
+
 // -------------------------------------------------------------------------
 // Routes Autentikasi
 // -------------------------------------------------------------------------
@@ -58,4 +67,9 @@ $routes->group('admin', ['filter' => 'auth'], function($routes) {
 
     // API Chart Data
     $routes->get('chart', 'AdminController::chartData');
+
+    // API Chart & Stats
+    $routes->get('api/trend', 'AdminController::apiTrend');
+    $routes->get('api/kunjungan-terakhir', 'AdminController::apiKunjunganTerakhir');
+    $routes->post('api/bulk-delete', 'AdminController::bulkDelete');
 });
