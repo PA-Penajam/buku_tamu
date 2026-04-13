@@ -138,10 +138,11 @@ class AdminController extends Controller
     public function chartData()
     {
         $tahun = $this->request->getGet('tahun') ?? date('Y');
+        $bulan = (int) ($this->request->getGet('bulan') ?? date('m'));
 
         $statistik = $this->tamuModel->statistikBulanan($tahun);
 
-        // Format data untuk Chart.js
+        // Format data untuk ApexCharts
         $labels = [];
         $pengunjungData = [];
         $tamuData = [];
@@ -155,18 +156,52 @@ class AdminController extends Controller
 
         // Isi data dari query
         foreach ($statistik as $row) {
-            $bulan = (int) $row['bulan'];
+            $bulanIdx = (int) $row['bulan'];
             if ($row['jenis_tamu'] === 'pengunjung') {
-                $pengunjungData[$bulan] = (int) $row['jumlah'];
+                $pengunjungData[$bulanIdx] = (int) $row['jumlah'];
             } else {
-                $tamuData[$bulan] = (int) $row['jumlah'];
+                $tamuData[$bulanIdx] = (int) $row['jumlah'];
             }
         }
 
+        // Data distribusi untuk donut chart (seluruh tahun)
+        $totalPengunjung = array_sum($pengunjungData);
+        $totalTamu = array_sum($tamuData);
+
+        // Statistik periode yang dipilih
+        $dataPeriode = $this->tamuModel
+            ->filterBulanTahun($bulan, $tahun)
+            ->orderBy('tanggal', 'DESC')
+            ->findAll();
+
+        $totalPeriode = count($dataPeriode);
+
+        // Hitung puncak kunjungan (hari dengan kunjungan terbanyak)
+        $puncak = 0;
+        foreach ($dataPeriode as $item) {
+            $dayCount = $this->tamuModel
+                ->where('DATE(tanggal)', date('Y-m-d', strtotime($item['tanggal'])))
+                ->countAllResults();
+            if ($dayCount > $puncak) $puncak = $dayCount;
+        }
+
+        // Rata-rata per hari (angka hari di bulan tersebut)
+        $jumlahHari = cal_days_in_month(CAL_GREGORIAN, $bulan, $tahun);
+        $rataRata = $jumlahHari > 0 ? round($totalPeriode / $jumlahHari, 1) : 0;
+
         return $this->response->setJSON([
-            'labels'      => $labels,
-            'pengunjung'  => array_values($pengunjungData),
-            'tamu'        => array_values($tamuData),
+            'labels'          => $labels,
+            'pengunjung'      => array_values($pengunjungData),
+            'tamu'            => array_values($tamuData),
+            'distribusi'      => [
+                'pengunjung' => $totalPengunjung,
+                'tamu'       => $totalTamu,
+            ],
+            'ringkasan'       => [
+                'total_periode' => $totalPeriode,
+                'rata_per_hari' => $rataRata,
+                'puncak'        => $puncak,
+            ],
         ]);
     }
 
