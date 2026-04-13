@@ -478,6 +478,102 @@ class AdminController extends Controller
     }
 
     /**
+     * API endpoint data tren 7 hari terakhir untuk ApexCharts
+     *
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     */
+    public function apiTrend()
+    {
+        $tren = $this->tamuModel->tren7Hari();
+
+        $labels = array_column($tren, 'label');
+        $pengunjung = array_column($tren, 'pengunjung');
+        $tamu = array_column($tren, 'tamu');
+
+        // Hitung trend persentase
+        $today = $this->tamuModel->totalHariIni();
+        $yesterday = $this->tamuModel->totalKemarin();
+        $trendHariIni = $yesterday > 0 ? round((($today - $yesterday) / $yesterday) * 100) : 0;
+
+        return $this->response->setJSON([
+            'labels'      => $labels,
+            'pengunjung'  => $pengunjung,
+            'tamu'        => $tamu,
+            'trend'       => [
+                'hari_ini_vs_kemarin' => ($trendHariIni >= 0 ? '+' : '') . $trendHariIni . '%',
+            ],
+        ]);
+    }
+
+    /**
+     * API endpoint data kunjungan terakhir
+     *
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     */
+    public function apiKunjunganTerakhir()
+    {
+        $data = $this->tamuModel->kunjunganTerakhir(5);
+
+        foreach ($data as &$item) {
+            $item['waktu_relatif'] = $this->waktuRelatif($item['tanggal']);
+        }
+
+        return $this->response->setJSON([
+            'data' => $data,
+        ]);
+    }
+
+    /**
+     * Hapus multiple data tamu/pengunjung via AJAX
+     *
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     */
+    public function bulkDelete()
+    {
+        $ids = $this->request->getPost('ids');
+
+        if (empty($ids) || !is_array($ids)) {
+            return $this->response->setJSON([
+                'status'  => 'error',
+                'message' => 'Tidak ada data yang dipilih',
+            ]);
+        }
+
+        // Validasi setiap ID adalah angka
+        $ids = array_filter($ids, 'is_numeric');
+
+        if ($this->tamuModel->whereIn('id', $ids)->delete()) {
+            return $this->response->setJSON([
+                'status'  => 'success',
+                'message' => count($ids) . ' data berhasil dihapus',
+            ]);
+        }
+
+        return $this->response->setJSON([
+            'status'  => 'error',
+            'message' => 'Gagal menghapus data',
+        ]);
+    }
+
+    /**
+     * Helper untuk format waktu relatif
+     *
+     * @param string $datetime
+     * @return string
+     */
+    private function waktuRelatif($datetime)
+    {
+        $now = time();
+        $time = strtotime($datetime);
+        $diff = $now - $time;
+
+        if ($diff < 60) return 'Baru saja';
+        if ($diff < 3600) return floor($diff / 60) . ' menit yang lalu';
+        if ($diff < 86400) return floor($diff / 3600) . ' jam yang lalu';
+        return floor($diff / 86400) . ' hari yang lalu';
+    }
+
+    /**
      * Helper untuk mendapatkan nama bulan
      *
      * @param int $bulan
