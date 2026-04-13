@@ -34,7 +34,7 @@
 <div class="d-flex flex-column flex-root h-100" id="kt_app_root">
     <div class="d-flex flex-column flex-center flex-column-fluid">
         <div class="d-flex flex-column flex-center text-center p-10 w-100">
-            <div class="card card-flush w-lg-750px py-5">
+            <div class="card card-flush w-lg-750px py-5 mx-auto">
                 <div class="card-body py-10 px-10">
 
                     <!-- Header -->
@@ -78,28 +78,28 @@
                     </div>
 
                     <!-- Card Pilihan -->
-                    <div class="row g-5">
-                        <div class="col-md-6">
-                            <a href="/pengunjung" class="card card-choice border border-primary border-dashed bg-light-primary text-center p-10 h-100 d-block text-decoration-none">
-                                <div class="symbol symbol-80px symbol-circle bg-light-primary mx-auto mb-5">
+                    <div class="row g-5 justify-content-center">
+                        <div class="col-md-5">
+                            <a href="/pengunjung" class="card card-choice border border-primary border-dashed bg-light-primary text-center p-8 d-block text-decoration-none">
+                                <div class="symbol symbol-70px symbol-circle bg-light-primary mx-auto mb-4">
                                     <span class="symbol-label">
                                         <i class="ki-duotone ki-people text-primary fs-3x"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span></i>
                                     </span>
                                 </div>
                                 <h3 class="text-primary fw-bolder mb-2">Pengunjung</h3>
-                                <div class="text-gray-600 fs-7 mb-5">Untuk masyarakat umum yang berkunjung ke kantor</div>
+                                <div class="text-gray-600 fs-7 mb-4">Untuk masyarakat umum yang berkunjung ke kantor</div>
                                 <div class="btn btn-sm btn-primary fw-bold w-100">Isi Data Pengunjung</div>
                             </a>
                         </div>
-                        <div class="col-md-6">
-                            <a href="/tamu" class="card card-choice border border-success border-dashed bg-light-success text-center p-10 h-100 d-block text-decoration-none">
-                                <div class="symbol symbol-80px symbol-circle bg-light-success mx-auto mb-5">
+                        <div class="col-md-5">
+                            <a href="/tamu" class="card card-choice border border-success border-dashed bg-light-success text-center p-8 d-block text-decoration-none">
+                                <div class="symbol symbol-70px symbol-circle bg-light-success mx-auto mb-4">
                                     <span class="symbol-label">
                                         <i class="ki-duotone ki-badge text-success fs-3x"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span></i>
                                     </span>
                                 </div>
                                 <h3 class="text-success fw-bolder mb-2">Tamu</h3>
-                                <div class="text-gray-600 fs-7 mb-5">Untuk tamu dari instansi/perusahaan yang berkunjung</div>
+                                <div class="text-gray-600 fs-7 mb-4">Untuk tamu dari instansi/perusahaan yang berkunjung</div>
                                 <div class="btn btn-sm btn-success fw-bold w-100">Isi Data Tamu</div>
                             </a>
                         </div>
