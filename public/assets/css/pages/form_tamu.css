@@ -1,0 +1,196 @@
+/* Styling khusus Card Form agar menyatu dengan background */
+.form-card {
+    border: 0;
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px 0 rgba(0,0,0,0.15);
+    background-color: #ffffff;
+    overflow: hidden;
+}
+
+/* Stepper Styling Custom - Modern Glassmorphism */
+.stepper-pills {
+    background: rgba(243, 246, 249, 0.4);
+    padding: 1.5rem;
+    border-radius: 1.25rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(228, 230, 239, 0.6);
+}
+
+.stepper-pills .stepper-item .stepper-icon {
+    background-color: #f5f5f5 !important;
+    color: #A1A5B7 !important;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 2px solid #E4E6EF !important;
+    width: 45px !important;
+    height: 45px !important;
+}
+
+.stepper-pills .stepper-item .stepper-icon .stepper-number {
+    color: #A1A5B7 !important;
+}
+
+.stepper-pills .stepper-item .stepper-title {
+    color: #7E8299;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+/* === THEME PRIMARY (Pengunjung) === */
+.theme-primary .stepper-pills .stepper-item.current .stepper-icon {
+    background-color: var(--bs-primary) !important;
+    color: #ffffff !important;
+    border-color: var(--bs-primary) !important;
+    box-shadow: 0 0 15px 0 rgba(var(--bs-primary-rgb), 0.35);
+}
+.theme-primary .stepper-pills .stepper-item.current .stepper-icon .stepper-number {
+    color: #ffffff !important;
+}
+.theme-primary .stepper-pills .stepper-item.current .stepper-title {
+    color: var(--bs-primary) !important;
+    font-weight: 800;
+}
+.theme-primary .stepper-pills .stepper-item.completed .stepper-icon {
+    background-color: #3699FF1a !important;
+    color: #3699FF !important;
+    border-color: #3699FF !important;
+}
+.theme-primary .stepper-pills .stepper-item.completed .stepper-title {
+    color: #3699FF;
+}
+.theme-primary .stepper-pills .stepper-item.completed .stepper-check {
+    color: #3699FF !important;
+}
+.theme-primary .stepper-item.completed .stepper-line {
+    border-bottom-color: #3699FF;
+    opacity: 1;
+}
+.theme-primary .countdown-number {
+    color: var(--bs-primary);
+}
+
+/* === THEME SUCCESS (Tamu) === */
+.theme-success .stepper-pills .stepper-item.current .stepper-icon {
+    background-color: var(--bs-success) !important;
+    color: #ffffff !important;
+    border-color: var(--bs-success) !important;
+    box-shadow: 0 0 15px 0 rgba(var(--bs-success-rgb), 0.35);
+}
+.theme-success .stepper-pills .stepper-item.current .stepper-icon .stepper-number {
+    color: #ffffff !important;
+}
+.theme-success .stepper-pills .stepper-item.current .stepper-title {
+    color: var(--bs-success) !important;
+    font-weight: 800;
+}
+.theme-success .stepper-pills .stepper-item.completed .stepper-icon {
+    background-color: #50CD891a !important;
+    color: #50CD89 !important;
+    border-color: #50CD89 !important;
+}
+.theme-success .stepper-pills .stepper-item.completed .stepper-title {
+    color: #50CD89;
+}
+.theme-success .stepper-pills .stepper-item.completed .stepper-check {
+    color: #50CD89 !important;
+}
+.theme-success .stepper-item.completed .stepper-line {
+    border-bottom-color: #50CD89;
+    opacity: 1;
+}
+.theme-success .countdown-number {
+    color: var(--bs-success);
+}
+
+/* Garis Stepper umum */
+.stepper-pills .stepper-item .stepper-line {
+    border-bottom: 2px solid #E4E6EF;
+    margin: 0 1.5rem;
+    flex-grow: 1;
+    opacity: 0.5;
+}
+
+/* Kamera & Wajah Frame */
+.camera-box {
+    position: relative;
+    width: 100%;
+    max-width: 520px;
+    height: 380px;
+    margin: 0 auto;
+    background-color: #000000;
+    border-radius: 2rem;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    border: 4px solid #ffffff;
+}
+
+.camera-feed {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1);
+    transition: filter 0.5s ease;
+}
+
+.camera-guide-svg {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 5;
+    transition: opacity 0.3s ease;
+}
+
+/* Flash Effect */
+.camera-flash {
+    position: absolute;
+    inset: 0;
+    background: white;
+    opacity: 0;
+    z-index: 50;
+    pointer-events: none;
+}
+@keyframes flash-anim {
+    0% { opacity: 0; }
+    10% { opacity: 1; }
+    100% { opacity: 0; }
+}
+.do-flash { animation: flash-anim 0.4s ease-out; }
+
+/* Area Kontrol Kamera External */
+.camera-controls-external {
+    padding: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Countdown overlay */
+.countdown-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 20;
+}
+.countdown-number {
+    font-size: 8rem;
+    font-weight: 800;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Validasi Feedback */
+.is-valid { border-color: #50CD89 !important; }
+.is-invalid { border-color: #F1416C !important; }
+.valid-feedback { display: none; color: #50CD89; font-size: 0.85rem; margin-top: 4px; }
+.invalid-feedback { display: none; color: #F1416C; font-size: 0.85rem; margin-top: 4px; }
+.is-valid ~ .valid-feedback { display: block; }
+.is-invalid ~ .invalid-feedback { display: block; }
+
+.upload-fallback { display: none; }
+
+/* Ukuran font bantuan */
+.fs-7 { font-size: 0.85rem !important; }

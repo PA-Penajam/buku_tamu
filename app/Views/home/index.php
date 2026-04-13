@@ -1,40 +1,5 @@
 <?= $this->extend('layouts/metronic') ?>
 
-<?= $this->section('styles') ?>
-<style>
-    /* Card choice hover animation */
-    .card-choice {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .card-choice:hover {
-        transform: translateY(-8px) scale(1.02);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
-    }
-
-    /* Info strip pulse animation */
-    .pulse-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        display: inline-block;
-        animation: pulse 2s infinite;
-    }
-    .pulse-dot.buka { background-color: #50CD89; }
-    .pulse-dot.tutup { background-color: #F1416C; }
-
-    @keyframes pulse {
-        0% { opacity: 1; transform: scale(1); }
-        50% { opacity: 0.5; transform: scale(1.5); }
-        100% { opacity: 1; transform: scale(1); }
-    }
-
-    /* Centering card di dalam layout flex */
-    .min-h-100 {
-        min-height: 100vh;
-    }
-</style>
-<?= $this->endSection() ?>
-
 <?= $this->section('content') ?>
 <div class="d-flex flex-column-fluid flex-center min-h-100" id="kt_app_root">
     <div class="d-flex flex-column flex-center text-center p-10 w-100">
@@ -118,39 +83,4 @@
             </div>
         </div>
     </div>
-<?= $this->endSection() ?>
-
-<?= $this->section('scripts') ?>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    // Fetch data statistik hari ini
-    fetch('<?= base_url('api/stats/today') ?>')
-        .then(function (response) { return response.json(); })
-        .then(function (data) {
-            // Update status kantor
-            var statusDot = document.getElementById('statusDot');
-            var statusText = document.getElementById('statusText');
-            if (data.status_kantor === 'buka') {
-                statusDot.classList.remove('tutup');
-                statusDot.classList.add('buka');
-                statusText.textContent = 'Buka';
-                statusText.classList.add('text-success');
-            } else {
-                statusDot.classList.remove('buka');
-                statusDot.classList.add('tutup');
-                statusText.textContent = 'Tutup';
-                statusText.classList.add('text-danger');
-            }
-
-            // Update jam operasional
-            document.getElementById('jamText').textContent = data.jam_operasional;
-
-            // Update counter kunjungan
-            document.getElementById('counterKunjungan').textContent = data.total_hari_ini;
-        })
-        .catch(function () {
-            document.getElementById('statusText').textContent = 'Gagal memuat';
-        });
-});
-</script>
 <?= $this->endSection() ?>

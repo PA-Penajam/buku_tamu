@@ -1,0 +1,30 @@
+/* Card choice hover animation */
+.card-choice {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card-choice:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* Info strip pulse animation */
+.pulse-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    animation: pulse 2s infinite;
+}
+.pulse-dot.buka { background-color: #50CD89; }
+.pulse-dot.tutup { background-color: #F1416C; }
+
+@keyframes pulse {
+    0% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.5); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+/* Centering card di dalam layout flex */
+.min-h-100 {
+    min-height: 100vh;
+}

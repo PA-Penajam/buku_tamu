@@ -23,7 +23,8 @@ class AuthController extends Controller
         }
 
         $data = [
-            'title' => 'Login Admin',
+            'title'    => 'Login Admin',
+            'js_files' => ['assets/js/pages/auth_login.js']
         ];
 
         return view('auth/login', $data);

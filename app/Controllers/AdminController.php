@@ -26,8 +26,9 @@ class AdminController extends Controller
     public function index()
     {
         $data = [
-            'title'   => 'Dashboard Admin',
-            'stats'   => $this->tamuModel->ringkasanDashboard(),
+            'title'    => 'Dashboard Admin',
+            'stats'    => $this->tamuModel->ringkasanDashboard(),
+            'js_files' => ['assets/js/pages/admin_dashboard.js'],
         ];
 
         return view('admin/dashboard', $data);
@@ -41,7 +42,8 @@ class AdminController extends Controller
     public function pengunjung()
     {
         $data = [
-            'title' => 'Daftar Pengunjung'
+            'title'    => 'Daftar Pengunjung',
+            'js_files' => ['assets/js/pages/admin_pengunjung.js'],
         ];
 
         return view('admin/pengunjung_list', $data);
@@ -74,7 +76,8 @@ class AdminController extends Controller
     public function tamu()
     {
         $data = [
-            'title' => 'Daftar Tamu'
+            'title'    => 'Daftar Tamu',
+            'js_files' => ['assets/js/pages/admin_tamu.js'],
         ];
 
         return view('admin/tamu_list', $data);
@@ -124,6 +127,7 @@ class AdminController extends Controller
             'tahun'       => $tahun,
             'dataLaporan' => $dataLaporan,
             'statistik'   => $statistik,
+            'js_files'    => ['assets/js/pages/admin_laporan.js'],
         ];
 
         return view('admin/laporan', $data);

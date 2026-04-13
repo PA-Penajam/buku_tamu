@@ -30,7 +30,7 @@ $bulanList = [
 ?>
 
 <?= $this->section('content') ?>
-<div class="container-xxl mt-5" id="kt_content_container">
+<div class="container-xxl mt-5" id="kt_content_container" data-url-chart="<?= base_url('admin/chart?tahun=' . $tahun . '&bulan=' . $bulan) ?>">
 
     <!-- Filter -->
     <div class="row g-5 g-xl-8 mb-5">
@@ -198,75 +198,4 @@ $bulanList = [
 </div>
 <?= $this->endSection() ?>
 
-<?= $this->section('scripts') ?>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    var primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--kt-primary').trim();
-    var successColor = getComputedStyle(document.documentElement).getPropertyValue('--kt-success').trim();
-    var warningColor = getComputedStyle(document.documentElement).getPropertyValue('--kt-warning').trim();
-
-    // Fetch chart data (ApexCharts sudah di plugins.bundle.js)
-    fetch('<?= base_url('admin/chart?tahun=' . $tahun . '&bulan=' . $bulan) ?>')
-        .then(function (r) { return r.json(); })
-        .then(function (data) {
-            // Update summary cards
-            if (data.ringkasan) {
-                document.getElementById('summaryTotal').textContent = data.ringkasan.total_periode;
-                document.getElementById('summaryRata').textContent = data.ringkasan.rata_per_hari;
-                document.getElementById('summaryPuncak').textContent = data.ringkasan.puncak;
-            }
-
-            // Mixed chart: bar (pengunjung) + line (tamu)
-            var mixedOptions = {
-                series: [
-                    { name: 'Pengunjung', type: 'column', data: data.pengunjung },
-                    { name: 'Tamu', type: 'line', data: data.tamu }
-                ],
-                chart: { height: 350, type: 'line', toolbar: { show: false } },
-                colors: [primaryColor, successColor],
-                stroke: { width: [0, 4] },
-                labels: data.labels,
-                xaxis: { type: 'category' },
-                yaxis: [
-                    { title: { text: 'Pengunjung' }, beginAtZero: true }
-                ],
-                fill: { opacity: 1 },
-                tooltip: { shared: true, intersect: false },
-                legend: { position: 'top' }
-            };
-            new ApexCharts(document.querySelector('#chartKunjungan'), mixedOptions).render();
-
-            // Donut chart: distribusi pengunjung vs tamu
-            if (data.distribusi) {
-                var donutOptions = {
-                    series: [data.distribusi.pengunjung, data.distribusi.tamu],
-                    chart: { type: 'donut', width: '100%' },
-                    labels: ['Pengunjung', 'Tamu'],
-                    colors: [primaryColor, successColor],
-                    plotOptions: {
-                        pie: {
-                            donut: {
-                                size: '70%',
-                                labels: {
-                                    show: true,
-                                    total: {
-                                        show: true,
-                                        label: 'Total',
-                                        formatter: function (w) {
-                                            return w.globals.seriesTotals.reduce(function (a, b) { return a + b; }, 0);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    legend: { position: 'bottom' },
-                    dataLabels: { enabled: true, formatter: function (val) { return val; } }
-                };
-                new ApexCharts(document.querySelector('#chartDistribusi'), donutOptions).render();
-            }
-        })
-        .catch(function (err) { console.error('Gagal load chart:', err); });
-});
-</script>
-<?= $this->endSection() ?>
+<!-- Scripts moved to admin_laporan.js -->

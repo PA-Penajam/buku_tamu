@@ -17,14 +17,18 @@ class HomeController extends Controller
      */
     public function index()
     {
-        // Langsung redirect ke form tamu karena fitur tamu/pengunjung telah disatukan
+        // Langsung redirect ke form tamu agar buku tamu lebih sederhana (tanpa pilihan pengunjung/tamu)
         return redirect()->to('/tamu');
         
+        /* 
+        Logika lama jika ingin menampilkan home:
         $data = [
-            'title' => 'Selamat Datang - Buku Tamu',
+            'title' => 'Buku Tamu Pengadilan Agama Penajam',
+            'css_files' => ['assets/css/pages/home.css'],
+            'js_files'  => ['assets/js/pages/home.js'],
         ];
-
         return view('home/index', $data);
+        */
     }
 
     /**

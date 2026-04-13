@@ -40,8 +40,10 @@ class TamuController extends Controller
     public function tamu()
     {
         $data = [
-            'title'     => 'Pendaftaran Tamu',
+            'title'      => 'Pendaftaran Tamu',
             'jenis_tamu' => 'tamu',
+            'css_files'  => ['assets/css/pages/form_tamu.css'],
+            'js_files'   => ['assets/js/pages/form_tamu.js'],
         ];
 
         return view('tamu/form', $data);

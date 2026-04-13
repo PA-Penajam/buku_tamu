@@ -15,6 +15,11 @@
     <link href="<?= base_url('assets/plugins/custom/datatables/datatables.bundle.css') ?>" rel="stylesheet" type="text/css" />
     <?php endif; ?>
     <?= $this->renderSection('styles') ?>
+    <?php if (isset($css_files) && is_array($css_files)): ?>
+        <?php foreach ($css_files as $css): ?>
+        <link href="<?= base_url($css) ?>" rel="stylesheet" type="text/css" />
+        <?php endforeach; ?>
+    <?php endif; ?>
 </head>
 <?php
     // Determine if current page is admin
@@ -93,6 +98,12 @@
 
     <!-- Custom Scripts -->
     <?= $this->renderSection('scripts') ?>
+    
+    <?php if (isset($js_files) && is_array($js_files)): ?>
+        <?php foreach ($js_files as $js): ?>
+        <script src="<?= base_url($js) ?>"></script>
+        <?php endforeach; ?>
+    <?php endif; ?>
 
     <?php if (session()->getFlashdata('success') || session()->getFlashdata('error')): ?>
     <script>
