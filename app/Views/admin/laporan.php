@@ -4,6 +4,23 @@
 <?= view('partials/header_admin') ?>
 <?= $this->endSection() ?>
 
+<?= $this->section('breadcrumb') ?>
+<div class="app-toolbar py-3 py-lg-6" id="kt_app_toolbar">
+    <div class="app-container container-xxl d-flex flex-stack">
+        <div class="page-title d-flex flex-column me-3">
+            <h1 class="page-heading d-flex text-gray-900 fw-bold fs-3 flex-column justify-content-center me-10">Laporan Bulanan</h1>
+            <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
+                <li class="breadcrumb-item text-muted"><a href="/" class="text-muted text-hover-primary">Home</a></li>
+                <li class="breadcrumb-item"><span class="bullet bg-gray-400 w-5px h-5px"></span></li>
+                <li class="breadcrumb-item text-gray-500">Admin</li>
+                <li class="breadcrumb-item"><span class="bullet bg-gray-400 w-5px h-5px"></span></li>
+                <li class="breadcrumb-item text-gray-500">Laporan</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<?= $this->endSection() ?>
+
 <?php
 $bulanList = [
     1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',

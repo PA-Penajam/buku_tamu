@@ -4,6 +4,23 @@
 <?= view('partials/header_admin') ?>
 <?= $this->endSection() ?>
 
+<?= $this->section('breadcrumb') ?>
+<div class="app-toolbar py-3 py-lg-6" id="kt_app_toolbar">
+    <div class="app-container container-xxl d-flex flex-stack">
+        <div class="page-title d-flex flex-column me-3">
+            <h1 class="page-heading d-flex text-gray-900 fw-bold fs-3 flex-column justify-content-center me-10">Daftar Pengunjung</h1>
+            <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
+                <li class="breadcrumb-item text-muted"><a href="/" class="text-muted text-hover-primary">Home</a></li>
+                <li class="breadcrumb-item"><span class="bullet bg-gray-400 w-5px h-5px"></span></li>
+                <li class="breadcrumb-item text-gray-500">Admin</li>
+                <li class="breadcrumb-item"><span class="bullet bg-gray-400 w-5px h-5px"></span></li>
+                <li class="breadcrumb-item text-gray-500">Daftar Pengunjung</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<?= $this->endSection() ?>
+
 <?= $this->section('content') ?>
 <div class="container-xxl mt-5" id="kt_content_container">
     <div class="card card-flush">
