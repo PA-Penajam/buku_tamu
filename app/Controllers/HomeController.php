@@ -17,10 +17,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        if (env('TAMU_ONLY') == true) {
-            return redirect()->to('/tamu');
-        }
-
+        // Langsung redirect ke form tamu karena fitur tamu/pengunjung telah disatukan
+        return redirect()->to('/tamu');
+        
         $data = [
             'title' => 'Selamat Datang - Buku Tamu',
         ];

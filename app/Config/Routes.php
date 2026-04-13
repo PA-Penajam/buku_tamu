@@ -11,10 +11,10 @@ use CodeIgniter\Router\RouteCollection;
 // -------------------------------------------------------------------------
 
 // Homepage
-$routes->get('/', 'HomeController::index');
+$routes->get('/', 'TamuController::tamu');
 
 // Form Pendaftaran
-$routes->get('/pengunjung', 'TamuController::pengunjung');
+    // Route pengunjung telah dinonaktifkan (karena aplikasi ini sekarang murni khusus /tamu)
 $routes->get('/tamu', 'TamuController::tamu');
 $routes->post('/tamu/store', 'TamuController::store');
 

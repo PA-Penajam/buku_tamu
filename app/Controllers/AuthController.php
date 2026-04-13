@@ -51,8 +51,7 @@ class AuthController extends Controller
             $redirectUrl = session()->get('redirect_url') ?? '/admin';
             session()->remove('redirect_url');
 
-            return redirect()->to($redirectUrl)
-                ->with('success', 'Berhasil login!');
+            return redirect()->to($redirectUrl);
         }
 
         return redirect()->back()

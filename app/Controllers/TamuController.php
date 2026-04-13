@@ -135,7 +135,7 @@ class TamuController extends Controller
             return redirect()->to('/');
         }
 
-        // Hitung nomor antrian (urutan ke berapa hari ini)
+        // Hitung nomor urut kunjungan hari ini
         $today = date('Y-m-d');
         $antrian = $this->tamuModel
             ->where('DATE(tanggal)', $today)

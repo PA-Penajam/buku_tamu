@@ -27,14 +27,18 @@
         50% { opacity: 0.5; transform: scale(1.5); }
         100% { opacity: 1; transform: scale(1); }
     }
+
+    /* Centering card di dalam layout flex */
+    .min-h-100 {
+        min-height: 100vh;
+    }
 </style>
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
-<div class="d-flex flex-column flex-root h-100" id="kt_app_root">
-    <div class="d-flex flex-column flex-center flex-column-fluid">
-        <div class="d-flex flex-column flex-center text-center p-10 w-100">
-            <div class="card card-flush w-lg-750px py-5 mx-auto">
+<div class="d-flex flex-column-fluid flex-center min-h-100" id="kt_app_root">
+    <div class="d-flex flex-column flex-center text-center p-10 w-100">
+        <div class="card card-flush w-lg-750px py-5 mx-auto">
                 <div class="card-body py-10 px-10">
 
                     <!-- Header -->
@@ -114,7 +118,6 @@
             </div>
         </div>
     </div>
-</div>
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>

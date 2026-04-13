@@ -44,6 +44,7 @@ function isActiveMenu(string $path): string {
                     </a>
                 </div>
 
+                <?php if (env('TAMU_ONLY') != true): ?>
                 <!--begin::Menu item - Pengunjung-->
                 <div class="menu-item <?= strpos(current_url(), '/admin/pengunjung') !== false ? 'here show' : '' ?>">
                     <a class="menu-link" href="<?= base_url('admin/pengunjung') ?>">
@@ -56,6 +57,7 @@ function isActiveMenu(string $path): string {
                         <span class="menu-title">Pengunjung</span>
                     </a>
                 </div>
+                <?php endif; ?>
 
                 <!--begin::Menu item - Laporan-->
                 <div class="menu-item <?= strpos(current_url(), '/admin/laporan') !== false ? 'here show' : '' ?>">

@@ -23,11 +23,11 @@
                     Terima kasih telah mengisi data kunjungan Anda.
                 </p>
 
-                <!-- Info antrian -->
+                <!-- Info kunjungan -->
                 <div class="border border-dashed border-success rounded p-6 mb-8 bg-light-success">
                     <div class="row g-5">
                         <div class="col-6">
-                            <div class="text-muted fw-semibold fs-7 mb-1">Nomor Antrian</div>
+                            <div class="text-muted fw-semibold fs-7 mb-1">Nomor Kunjungan</div>
                             <div class="fw-bolder text-success fs-2x"><?= str_pad($antrian, 3, '0', STR_PAD_LEFT) ?></div>
                         </div>
                         <div class="col-6">

@@ -48,12 +48,11 @@
     <!--begin::Main-->
     <!--begin::Root-->
     <div class="d-flex flex-column flex-root">
+        <?php if ($is_admin): ?>
         <!--begin::Page-->
         <div class="page d-flex flex-row flex-column-fluid">
             <!--begin::Aside-->
-            <?php if ($is_admin): ?>
-                <?= view('partials/sidebar_admin') ?>
-            <?php endif; ?>
+            <?= view('partials/sidebar_admin') ?>
 
             <!--begin::Wrapper-->
             <div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper">
@@ -69,14 +68,17 @@
                 <!--end::Content-->
 
                 <!--begin::Footer-->
-                <?php if ($is_admin): ?>
-                    <?= view('partials/footer_admin') ?>
-                <?php endif; ?>
+                <?= view('partials/footer_admin') ?>
                 <!--end::Footer-->
             </div>
             <!--end::Wrapper-->
         </div>
         <!--end::Page-->
+        <?php else: ?>
+        <!--begin::Content (Guest/Auth)-->
+        <?= $this->renderSection('content') ?>
+        <!--end::Content (Guest/Auth)-->
+        <?php endif; ?>
     </div>
     <!--end::Root-->
     <!--end::Main-->
@@ -108,15 +110,24 @@
             <?php endif; ?>
 
             <?php if (session()->getFlashdata('error')): ?>
-            Swal.fire({
-                text: "<?= addslashes(session()->getFlashdata('error')) ?>",
-                icon: "error",
-                buttonsStyling: false,
-                confirmButtonText: "Ok, mengerti!",
-                customClass: {
-                    confirmButton: "btn btn-danger"
-                }
-            });
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": true,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+            toastr.error("<?= addslashes(session()->getFlashdata('error')) ?>");
             <?php endif; ?>
         });
     </script>
