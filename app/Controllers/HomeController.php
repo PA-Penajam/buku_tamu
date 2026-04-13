@@ -17,10 +17,34 @@ class HomeController extends Controller
      */
     public function index()
     {
+        if (env('TAMU_ONLY') == true) {
+            return redirect()->to('/tamu');
+        }
+
         $data = [
             'title' => 'Selamat Datang - Buku Tamu',
         ];
 
         return view('home/index', $data);
+    }
+
+    /**
+     * API endpoint statistik hari ini untuk widget homepage
+     *
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     */
+    public function apiStatsToday()
+    {
+        $tamuModel = new \App\Models\TamuModel();
+
+        // Tentukan status kantor berdasarkan jam
+        $jamSekarang = (int) date('H');
+        $statusKantor = ($jamSekarang >= 8 && $jamSekarang < 16) ? 'buka' : 'tutup';
+
+        return $this->response->setJSON([
+            'total_hari_ini'   => $tamuModel->totalHariIni(),
+            'status_kantor'    => $statusKantor,
+            'jam_operasional'  => '08:00 - 16:00',
+        ]);
     }
 }
