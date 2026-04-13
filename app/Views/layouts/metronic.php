@@ -63,6 +63,7 @@
 
                 <!--begin::Content-->
                 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+                    <?= $this->renderSection('breadcrumb') ?>
                     <?= $this->renderSection('content') ?>
                 </div>
                 <!--end::Content-->
