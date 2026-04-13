@@ -29,6 +29,7 @@ class TamuModel extends Model
         'instansi',
         'hp',
         'tujuan',
+        'foto',
     ];
 
     protected $validationRules = [
@@ -145,5 +146,88 @@ class TamuModel extends Model
             'total_pengunjung' => $this->where('jenis_tamu', 'pengunjung')->countAllResults(),
             'total_tamu' => $this->where('jenis_tamu', 'tamu')->countAllResults(),
         ];
+    }
+
+    /**
+     * Statistik kunjungan 7 hari terakhir per hari per jenis
+     *
+     * @return array
+     */
+    public function tren7Hari()
+    {
+        $results = [];
+
+        for ($i = 6; $i >= 0; $i--) {
+            $date = date('Y-m-d', strtotime("-{$i} days"));
+
+            if ($this->db->DBDriver === 'SQLite3') {
+                $pengunjung = $this->where('jenis_tamu', 'pengunjung')
+                                      ->where("date(tanggal)", $date)
+                                      ->countAllResults();
+                $tamu = $this->where('jenis_tamu', 'tamu')
+                            ->where("date(tanggal)", $date)
+                            ->countAllResults();
+            } else {
+                $pengunjung = $this->where('jenis_tamu', 'pengunjung')
+                                      ->where('DATE(tanggal)', $date)
+                                      ->countAllResults();
+                $tamu = $this->where('jenis_tamu', 'tamu')
+                            ->where('DATE(tanggal)', $date)
+                            ->countAllResults();
+            }
+
+            $results[] = [
+                'label'      => date('d/m', strtotime($date)),
+                'pengunjung' => $pengunjung,
+                'tamu'       => $tamu,
+            ];
+        }
+
+        return $results;
+    }
+
+    /**
+     * Data kunjungan terakhir (5 terbaru)
+     *
+     * @param int $limit
+     * @return array
+     */
+    public function kunjunganTerakhir(int $limit = 5)
+    {
+        return $this->orderBy('tanggal', 'DESC')
+                    ->limit($limit)
+                    ->findAll();
+    }
+
+    /**
+     * Hitung total hari ini
+     *
+     * @return int
+     */
+    public function totalHariIni()
+    {
+        $today = date('Y-m-d');
+
+        if ($this->db->DBDriver === 'SQLite3') {
+            return $this->where("date(tanggal)", $today)->countAllResults();
+        }
+
+        return $this->where('DATE(tanggal)', $today)->countAllResults();
+    }
+
+    /**
+     * Hitung total kemarin untuk perbandingan trend
+     *
+     * @return int
+     */
+    public function totalKemarin()
+    {
+        $yesterday = date('Y-m-d', strtotime('-1 day'));
+
+        if ($this->db->DBDriver === 'SQLite3') {
+            return $this->where("date(tanggal)", $yesterday)->countAllResults();
+        }
+
+        return $this->where('DATE(tanggal)', $yesterday)->countAllResults();
     }
 }
