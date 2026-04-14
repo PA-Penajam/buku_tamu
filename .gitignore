@@ -130,3 +130,4 @@ _modules/*
 .claude/plans/
 docs/demo10/
 *.png
+public/uploads/
