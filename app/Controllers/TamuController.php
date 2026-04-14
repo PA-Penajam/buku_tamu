@@ -79,18 +79,41 @@ class TamuController extends Controller
                 ->with('errors', $this->validator->getErrors());
         }
 
-        // Proses penyimpanan Foto Base64
+        // Proses penyimpanan Foto Base64 dengan validasi ketat
         $fotoName = null;
         $fotoBase64 = $this->request->getPost('foto_base64');
         if ($fotoBase64) {
             $imageParts = explode(";base64,", $fotoBase64);
             if (count($imageParts) === 2) {
                 $imageTypeAux = explode("image/", $imageParts[0]);
-                $imageType = $imageTypeAux[1] ?? 'jpeg';
+                $imageType = strtolower($imageTypeAux[1] ?? 'jpeg');
+                // Validasi tipe file yang diizinkan
+                $allowedTypes = ['jpeg', 'jpg', 'png', 'gif'];
+                if (!in_array($imageType, $allowedTypes)) {
+                    return redirect()->back()
+                        ->withInput()
+                        ->with('error', 'Tipe file gambar tidak diizinkan. Hanya JPG, PNG, dan GIF yang diperbolehkan.');
+                }
+                // Validasi ukuran file (maks 2MB)
+                $imageData = base64_decode($imageParts[1], true);
+                if ($imageData === false || strlen($imageData) > 2 * 1024 * 1024) {
+                    return redirect()->back()
+                        ->withInput()
+                        ->with('error', 'Ukuran gambar terlalu besar. Maksimal 2MB diperbolehkan.');
+                }
                 $imageBase64 = base64_decode($imageParts[1]);
-                $fotoName = uniqid('tamu_') . '.' . $imageType;
-                $filePath = FCPATH . 'uploads/tamu/' . $fotoName;
-                file_put_contents($filePath, $imageBase64);
+                $fotoName = 'tamu_' . bin2hex(random_bytes(8)) . '.' . $imageType;
+                $uploadDir = FCPATH . 'uploads/tamu/';
+                // Buat directory jika belum ada
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
+                $filePath = $uploadDir . $fotoName;
+                if (!file_put_contents($filePath, $imageBase64)) {
+                    return redirect()->back()
+                        ->withInput()
+                        ->with('error', 'Gagal menyimpan file gambar. Silakan coba lagi.');
+                }
             }
         }
 
