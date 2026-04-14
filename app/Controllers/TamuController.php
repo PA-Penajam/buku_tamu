@@ -10,11 +10,11 @@ use App\Models\TamuModel;
  */
 class TamuController extends Controller
 {
-    protected $tamuModel;
+    protected TamuRepository $tamuRepository;
 
     public function __construct()
     {
-        $this->tamuModel = new TamuModel();
+        $this->tamuRepository = new TamuRepository();
     }
 
     /**
@@ -56,13 +56,13 @@ class TamuController extends Controller
      */
     public function store()
     {
-        // Validasi input
+        // Validasi input dengan security hardening
         $rules = [
             'jenis_tamu' => 'required|in_list[pengunjung,tamu]',
-            'nama'       => 'required|max_length[255]',
-            'hp'         => 'permit_empty|max_length[20]',
-            'tujuan'     => 'required',
-            'foto_base64'=> 'required',
+            'nama'       => 'required|max_length[255]|alpha_numeric_spaces',
+            'hp'         => 'permit_empty|max_length[20]|numeric',
+            'tujuan'     => 'required|max_length[500]|alpha_numeric_punct',
+            'foto_base64'=> 'required|regex_match[/^data:image\/(jpeg|jpg|png|gif);base64,/]',
         ];
 
         // Tambah validasi berdasarkan jenis tamu
@@ -129,9 +129,9 @@ class TamuController extends Controller
             'foto'       => $fotoName,
         ];
 
-        // Simpan ke database
-        if ($this->tamuModel->insert($data)) {
-            $insertId = $this->tamuModel->getInsertID();
+        // Simpan ke database melalui Repository
+        $insertId = $this->tamuRepository->saveGuest($data);
+        if ($insertId) {
             return redirect()->to('/tamu/sukses')
                 ->with('tamu_id', $insertId)
                 ->with('success', 'Terima kasih! Data Anda berhasil disimpan.');
@@ -155,17 +155,13 @@ class TamuController extends Controller
             return redirect()->to('/');
         }
 
-        $tamu = $this->tamuModel->find($tamuId);
+        $tamu = $this->tamuRepository->findById($tamuId);
         if (!$tamu) {
             return redirect()->to('/');
         }
 
-        // Hitung nomor urut kunjungan hari ini
-        $today = date('Y-m-d');
-        $antrian = $this->tamuModel
-            ->where('DATE(tanggal)', $today)
-            ->where('id <=', $tamuId)
-            ->countAllResults();
+        // Hitung nomor urut antrian dari Repository
+        $antrian = $this->tamuRepository->getQueueNumber($tamuId);
 
         $data = [
             'title'   => 'Pendaftaran Berhasil',

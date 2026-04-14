@@ -11,11 +11,13 @@ class CreateIndexesForTamuTable extends Migration
         $this->forge->addKey('tanggal');
         $this->forge->addKey('jenis_tamu');
         $this->forge->addKey('created_at');
-        $this->forge->createTable('tamu');
+        $this->forge->processIndexes('tamu');
     }
 
     public function down()
     {
-        $this->forge->dropTable('tamu');
+        $this->forge->dropKey('tamu', 'tanggal');
+        $this->forge->dropKey('tamu', 'jenis_tamu');
+        $this->forge->dropKey('tamu', 'created_at');
     }
 }
