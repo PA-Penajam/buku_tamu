@@ -40,19 +40,17 @@ class AuthController extends Controller
         $password = $this->request->getPost('password');
         $adminPassword = getenv('ADMIN_PASSWORD') ?: env('ADMIN_PASSWORD', 'admin123');
 
-        // Gunakan layanan password hashing bawaan CodeIgniter 4
-        $passwordService = service('passwords');
-
+        // Gunakan password hashing native PHP yang stabil dan kompatibel disemua versi CodeIgniter 4
         // Gunakan password yang sudah di-hash (misalnya dari environment variable)
         // Untuk keamanan, password seharusnya di-set dalam environment sebagai hash
         $storedHash = getenv('ADMIN_PASSWORD_HASH');
         if (!$storedHash) {
-            // Fallback: gunakan hash jika belum ada hash yang disimpan
-            $storedHash = $passwordService->hash($adminPassword);
+            // Fallback: gunakan password_hash jika belum ada hash yang disimpan
+            $storedHash = password_hash($adminPassword, PASSWORD_DEFAULT);
         }
 
         // Validasi password dengan verifikasi yang aman
-        if ($passwordService->verify($password, $storedHash)) {
+        if (password_verify($password, $storedHash)) {
             // Set session
             session()->set([
                 'isLoggedIn' => true,
