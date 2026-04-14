@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use CodeIgniter\Controller;
-use App\Models\TamuModel;
+use App\Repositories\TamuRepository;
 
 /**
  * Controller untuk form pendaftaran tamu dan pengunjung
@@ -59,7 +59,7 @@ class TamuController extends Controller
         // Validasi input dengan security hardening
         $rules = [
             'jenis_tamu' => 'required|in_list[pengunjung,tamu]',
-            'nama'       => 'required|max_length[255]|alpha_numeric_spaces',
+            'nama'       => 'required|max_length[255]|alpha_numeric_space',
             'hp'         => 'permit_empty|max_length[20]|numeric',
             'tujuan'     => 'required|max_length[500]|alpha_numeric_punct',
             'foto_base64'=> 'required|regex_match[/^data:image\/(jpeg|jpg|png|gif);base64,/]',
